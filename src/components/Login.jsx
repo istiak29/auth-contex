@@ -1,15 +1,28 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 
 const Login = () => {
 
+    const {signInUser} = useContext(AuthContext)
+
     const handleLogin = e => {
-        e.preventDefault;
+        e.preventDefault();
 
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        console.log(email,',', password)
+        console.log(email, ',', password)
+        
+        // signIn user
+        signInUser(email, password)
+            .then(userCredential => {
+                console.log(userCredential.user)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     return (
@@ -52,7 +65,7 @@ const Login = () => {
 
                         {/*go to register page  */}
                         <div className="mb-5 ml-7">
-                            <p className="text-sm font-bold">New User? Please <span><Link className="link"  to={'/register'}>Register! </Link>here</span></p>
+                            <p className="text-sm font-bold">New User? Please <span><Link className="link link-secondary"  to={'/register'}>Register! </Link>here</span></p>
                         </div>
                     </div>
                 </div>

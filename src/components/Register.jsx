@@ -1,15 +1,29 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 
 const Register = () => {
 
-    const handleRegister = e => {
-        e.preventDefault;
+    const {createUser} = useContext(AuthContext);
 
+    const handleRegister = e => {
+        e.preventDefault();
+
+        const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        console.log(email, ',', password)
+        console.log(name, ',', email, ',', password)
+        
+        // create user with firebase
+        createUser(email, password)
+            .then(userCredential => {
+                console.log(userCredential.user)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     return (
@@ -60,7 +74,7 @@ const Register = () => {
 
                         {/*go to login page  */}
                         <div className="mb-5 ml-7">
-                            <p className="text-sm font-bold">Already a User? Please <span><Link className="link" to={'/login'}>Login!</Link> here</span></p>
+                            <p className="text-sm font-bold">Already a User? Please <span><Link className="link link-secondary" to={'/login'}>Login!</Link> here</span></p>
                         </div>
                     </div>
                 </div>
