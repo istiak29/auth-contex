@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import auth from "../firebase/firebase.config";
 
@@ -24,15 +24,25 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        onAuthStateChanged(auth, currentUser => {
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
             if (currentUser) {
                 setUser(currentUser)
                 console.log('observing current user inside useEffect', currentUser)
             }
         })
+
+        return () => {
+            unsubscribe
+        }
+
     }, [])
+
+    // sign out
+    const logOut = () => {
+        return signOut(auth)
+    }
     
-    const authInfo = {user, createUser, signInUser}
+    const authInfo = {user, createUser, signInUser, logOut}
 
     return (
         <AuthContext.Provider value={authInfo}>
